@@ -51,12 +51,49 @@ var isShift = false;
 var isPlay = false;
 var isRec = false;
 
+
+// a variable to hold a key-translation array:
+var padTranslation = initArray(0, 128);
+
+// a variable to hold the offset from the default:
+var padShift = 0;
+
+// a function to shift the array up or down by a certain offset
+// numbers outside the MIDI keyrange are set to -1 which mutes them.
+function setNoteTable(table, offset) {
+  for (var i = 0; i < 128; i++)
+   {
+      if ((i%8)<=3) {
+      	table[i] = offset + i;
+			} else {
+				// place 2d row in netural order like this:
+				// 5 6 7 8
+				// 1 2 3 4
+      	table[i] = offset + i -8;
+			}
+
+      if (table[i] < 0 || table[i] > 127) {
+         table[i] = -1;
+         
+      }
+   }
+
+  // here I set the KeyTranslationTable of the note input the the updated array:
+  twitchPads.setKeyTranslationTable(padTranslation);
+
+}
+
 function init()
 {
 	host.getMidiInPort(0).createNoteInput("Twitch", "000000");
-	// host.getMidiInPort(0).createNoteInput("Twitch", "976???", "977???", "986???", "987???");
-	// host.getMidiInPort(0).createNoteInput("Twitch", "976???", "977???");
 	host.getMidiInPort(0).setMidiCallback(onMidi);
+	
+	twitchPads = host.getMidiInPort(0).createNoteInput("Twitch Pads", "976???", "977???", "986???", "987???");
+	twitchPads.setShouldConsumeEvents(false);
+
+	setNoteTable(padTranslation, -56);
+	
+
 	transport = host.createTransportSection();
 	trackBank = host.createTrackBankSection(8, 0, 8);
 
@@ -76,7 +113,7 @@ function init()
 		isRec = on;
 	});
 
-	 // Add an observer which prints volume of the cursor track with 128 steps to the console
+	   // Add an observer which prints volume of the cursor track with 128 steps to the console
 	cursorTrack.getVolume().addValueObserver(128, function(value) {
 		println("VOLUME : " + value); 
 	});
@@ -156,48 +193,35 @@ function onMidi(status, data1, data2) {
 		}
 
 		// check which row pad (1-4 / 5-6)
-		var firstRow  = null;
-		var secondRow = null;
+		var isFirstPadRow  = null;
+		var isSecondPadRow = null;
 		// if first (1-4)
 		if ((cc >= 96 && cc <= 99) 
 			|| (cc >= 104 && cc <= 107)
 			|| (cc >= 112 && cc <= 115) 
 			|| (cc >= 120 && cc <= 123)) {
-				firstRow = true;
+				isFirstPadRow = true;
 		} 
 		// if second (5-8)
 		else if ((cc >= 100 && cc <= 103) 
 			|| (cc >= 108 && cc <= 111)
 			|| (cc >= 116 && cc <= 119) 
 			|| (cc >= 124 && cc <= 127)) {
-				secondRow = true;
+				isSecondPadRow = true;
 		}
 
-		var AorB = null;
+		var is_AorB_Deck = null;
 		if (status == BTN_CHANNEL.A || status == BTN_CHANNEL.B) {
-			AorB = true;
+			is_AorB_Deck = true;
 		}
 
-		// transpose right pads to C1 - C4
-		if (AorB && firstRow) {
+		// flash pads' backlights
+		if (is_AorB_Deck && cc>=96 && cc<=127) {
 			switch (val) {
 				case 127:
-					cursorTrack.playNote(cc-56, val);
 					LEDToggle(status, cc, 127)
 					break;
 				case 0:
-					cursorTrack.stopNote(cc-56, val);
-					LEDToggle(status, cc, 0);
-					break;
-			}
-		} else if  (AorB && secondRow) {
-			switch (val) {
-				case 127:
-					cursorTrack.playNote(cc-64, val);
-					LEDToggle(status, cc, 127);
-					break;
-				case 0:
-					cursorTrack.stopNote(cc-64, val);
 					LEDToggle(status, cc, 0);
 					break;
 			}
