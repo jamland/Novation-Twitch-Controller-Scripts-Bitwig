@@ -18,4 +18,5 @@ Controller Script for use [Novation Twitch](http://global.novationmusic.com/twit
 
 That's all! 
 if Twitch won't be detected do:
+
 3 Open _Bitwig -> Preferences -> Controllers - > **Detect Available Controllers**_
