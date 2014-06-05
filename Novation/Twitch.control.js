@@ -66,7 +66,7 @@ function setNoteTable(table, offset) {
       if ((i%8)<=3) {
       	table[i] = offset + i;
 			} else {
-				// place 2d row in netural order like this:
+				// set rows in usual order for drum machines. like this:
 				// 5 6 7 8
 				// 1 2 3 4
       	table[i] = offset + i -8;
@@ -100,6 +100,8 @@ function init()
 	cursorTrack = host.createCursorTrackSection(2, 0);
 	cursorDevice = cursorTrack.getPrimaryInstrument();
 
+	masterTrack = host.createMasterTrack(2);
+
 	application = host.createApplicationSection();
 
 	host.showPopupNotification('Twitch Initialized!');
@@ -116,6 +118,18 @@ function init()
 	   // Add an observer which prints volume of the cursor track with 128 steps to the console
 	cursorTrack.getVolume().addValueObserver(128, function(value) {
 		println("VOLUME : " + value); 
+	});
+
+	// update left VUmeter
+	masterTrack.addVuMeterObserver (128, 0, true, function (value) {
+   		LEDToggle(151, 95, value);
+   		LEDToggle(153, 95, value);
+	});
+
+	// update left VUmeter
+	masterTrack.addVuMeterObserver (128, 1, true, function (value) {
+   		LEDToggle(152, 95, value);
+   		LEDToggle(154, 95, value);
 	});
 
 
