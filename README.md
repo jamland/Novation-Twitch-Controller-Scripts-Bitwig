@@ -1,7 +1,7 @@
 Twitch Controller Script for Bitwig
 =========================
 
-Novation Twitch use 2 modes: Basic & Advanced. This script for basic mode only.
+Novation Twitch use 2 modes: Basic & Advanced. This script for defualt basic mode only.
 Controller Script for use [Novation Twitch](http://global.novationmusic.com/twitch) with [Bitwig Studio](http://www.bitwig.com/en/bitwig-studio/overview.html) which do few basic things:
 + Fixing pads start from C1-G1
 + Fixing pads LEDs
