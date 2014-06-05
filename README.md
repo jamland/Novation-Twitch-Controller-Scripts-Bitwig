@@ -5,6 +5,7 @@ Novation Twitch use 2 modes: Basic & Advanced. This script for defualt basic mod
 Controller Script for use [Novation Twitch](http://global.novationmusic.com/twitch) with [Bitwig Studio](http://www.bitwig.com/en/bitwig-studio/overview.html) which do few basic things:
 + Fixing pads start from C1-G1
 + Fixing pads LEDs
++ Fixing VU-meter. Show master 2channel' volume
 
 
 ## How To Use 
