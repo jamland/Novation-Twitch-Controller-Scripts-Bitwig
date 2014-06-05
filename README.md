@@ -16,4 +16,6 @@ Controller Script for use [Novation Twitch](http://global.novationmusic.com/twit
 - On Windows: `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\`
 - On Mac and Linux: `~/Documents/Bitwig Studio/Controller Scripts/`
 
+That's all! 
+if Twitch won't be detected do:
 3 Open _Bitwig -> Preferences -> Controllers - > **Detect Available Controllers**_
